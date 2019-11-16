@@ -1,0 +1,4 @@
+.env
+node_modules
+homework_instructions.md
+.DS_Store
