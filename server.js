@@ -1,4 +1,5 @@
 require('dotenv').config()
+require ('newrelic');
 var express = require('express');
 var path = require('path');
 var cors = require('cors')
@@ -17,12 +18,16 @@ app.use(methodOverride('_method'));
 
 //Connect to MongoDB
 const mongoose = require('mongoose');
-const dbURI = 'mongodb://localhost:27017/googlebooks'
+const Book = require('./models/book')
+//const dbURI = 'mongodb://localhost:27017/googlebooks'
+var dbURI = process.env.MONGODB_ATLAS_CLUSTER_URI;
+
 mongoose.connect(dbURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
-})
+}).catch(error => handleError(error))
+
 const db = mongoose.connection;
 db.on('error', function(error){
   console.log(colors.red('MongoDB error: ' + error))
@@ -64,9 +69,9 @@ app.post("/api/search", (req, res) => {
 // /api/books/:id (delete) - Will be used to delete a book from the database by Mongo _id.
 
 // * (get) - Will load your single HTML page in client/build/index.html. Make sure you have this after all other routes are defined.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'))
-})
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, './client/build/index.html'))
+// })
 
 app.listen(PORT, () => console.log(`LISTENING ON PORT ${PORT}`));
 
