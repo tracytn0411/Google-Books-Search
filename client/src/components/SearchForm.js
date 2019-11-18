@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Form, Button, FormControl, Row, Col, Container, Card} from 'react-bootstrap';
 import axios from 'axios';
+import SaveBtn from './SaveBtn';
 
 class SearchForm extends Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class SearchForm extends Component {
   render() {
     return (
       <Container fluid>
-        <Row>
+        <Row className='m-1'>
           <Col>
             <Form inline onSubmit={this.handleSubmit}>
               <FormControl
@@ -57,9 +58,9 @@ class SearchForm extends Component {
         </Row>
 
         {/* In a concise body, no need for block body (curly braces) and an implicit return is attached */}
-        <Row>
+        <Row className='m-1'>
           {this.state.searchResults.map((book, index) => (
-            <Col md={6} key={index}>
+            <Col md={6} lg={4} key={index}>
               <Card>
                 <Card.Header>
                   <h5>{book.volumeInfo.title}</h5>
@@ -74,6 +75,8 @@ class SearchForm extends Component {
                     </Col>
                     <Col md={8}>
                       <p className="lead">{book.volumeInfo.description}</p>
+                      <SaveBtn data_book = {book}/>
+                      
                     </Col>
                   </Row>
                 </Card.Body>

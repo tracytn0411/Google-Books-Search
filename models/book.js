@@ -1,17 +1,14 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var BookSchema = new Schema({
-
-  _id: Schema.Types.ObjectId,
-
   title: {
     type: String,
     required: true
   },
 
   authors: {
-    type: String,
+    type: [String],
     required: true
   },
 
@@ -24,16 +21,25 @@ var BookSchema = new Schema({
     trim: true
   },
 
-  link: {
+  book_link: {
     type: String,
     trim: true
   },
 
+  preview_link: {
+    type: String,
+    trim: true
+  },
+  book_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
   timeStamp: {
     type: Date,
     default: Date.now()
   }
-})
+});
 
-var Book = mongoose.model('Book', BookSchema)
+var Book = mongoose.model("Book", BookSchema);
 module.exports = Book;

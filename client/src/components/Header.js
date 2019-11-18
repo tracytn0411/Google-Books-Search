@@ -22,7 +22,7 @@ import {Container} from 'react-bootstrap';
 const Header = () => (
   <Jumbotron fluid>
     <Container className='p-2'>
-      <h1 className="header">Goolgle Books Search</h1>
+      <h1 className="header">Google Books Search</h1>
       {/* <p className='lead'>Get the lastest news from
       
       <img className='p-2' src={smashing} alt='magazine-logo'></img>

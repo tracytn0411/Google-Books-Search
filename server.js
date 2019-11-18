@@ -26,8 +26,7 @@ mongoose.connect(dbURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).catch(error => handleError(error))
-
+})
 const db = mongoose.connection;
 db.on('error', function(error){
   console.log(colors.red('MongoDB error: ' + error))
@@ -60,6 +59,17 @@ app.post("/api/search", (req, res) => {
       console.log(colors.red("Google API axios error: " + error));
     });
 });
+
+app.post('/api/books', (req, res) => {
+  Book.create(req.body, (err, doc) => {
+    if(err) {
+      console.log(colors.red(`New book saved to MongoDB error: ${err}`))
+    } else {
+      console.log(`New book saved to MongoDB: ${doc}`.green)
+    }
+
+  })
+})
 
 // https://developers.google.com/books/docs/v1/using
 // /api/books (get) - Should return all saved books as JSON.
