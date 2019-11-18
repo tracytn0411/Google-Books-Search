@@ -3,7 +3,7 @@ require ('newrelic');
 var express = require('express');
 var path = require('path');
 var cors = require('cors')
-var PORT = process.env.port || 5000
+var PORT = process.env.PORT || 5000
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var colors = require('colors');

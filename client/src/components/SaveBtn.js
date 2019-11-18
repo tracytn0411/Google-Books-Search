@@ -14,7 +14,7 @@ class SaveBtn extends Component {
     this.handleDelete = this.handleDelete.bind(this)
   }
 
-  handleSave(){
+  handleSave(book){
     //e.preventDefaut()
     var newBook = this.state.book.volumeInfo
 
