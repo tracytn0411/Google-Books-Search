@@ -25,7 +25,8 @@ var dbURI = process.env.MONGODB_ATLAS_CLUSTER_URI;
 mongoose.connect(dbURI, {
   useCreateIndex: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false // to use FindByIdAndRemove
 })
 const db = mongoose.connection;
 db.on('error', function(error){
@@ -43,16 +44,24 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
 })
 
+// Search for books
 app.post("/api/search", (req, res) => {
-  //var bookTitle = req.body.title;
-  var bookTitle = req.body.title.replace(/\s/g, "+")
+  var bookTitle = req.body.title.replace(/\s/g, "+") //replace space with '+'
   console.log(bookTitle);
   var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&key=${process.env.BOOKS_API_KEY}`;
   console.log(bookUrl);
   axios
     .get(bookUrl)
     .then(response => {
-      console.log(response.data.items);
+      //console.log(response.data.items);
+      //var booksArray = response.data.items
+
+     
+      // booksArray.forEach((book,i) => {
+      //   var bookID = book[i].id
+      //   console.log(bookID)
+      // });
+      //console.log(bookID)
       res.json(response.data.items);
     })
     .catch(error => {
@@ -60,6 +69,7 @@ app.post("/api/search", (req, res) => {
     });
 });
 
+// /api/books (post) - Will be used to save a new book to the database.
 app.post('/api/books', (req, res) => {
   Book.create(req.body, (err, doc) => {
     if(err) {
@@ -71,12 +81,22 @@ app.post('/api/books', (req, res) => {
   })
 })
 
-// https://developers.google.com/books/docs/v1/using
-// /api/books (get) - Should return all saved books as JSON.
 
-// /api/books (post) - Will be used to save a new book to the database.
+// /api/books (get) - Should return all saved books as JSON.
+app.get('/api/books', (req, res) => {
+  Book.find({}, (err, books) => {
+    if(err) return console.log(colors.red(`Get saved books from MongoDB ERROR: ${err}`))
+    else res.json(books)
+  })
+})
 
 // /api/books/:id (delete) - Will be used to delete a book from the database by Mongo _id.
+app.delete('/api/books/:id', (req, res) => {
+  Book.findByIdAndRemove({'_id': req.params.id}).exec((err, res) => {
+    if(err) return console.log(`MongoDB delete book ERROR: ${err}`)
+    else console.log(res)
+  })
+})
 
 // * (get) - Will load your single HTML page in client/build/index.html. Make sure you have this after all other routes are defined.
 // app.get('*', (req, res) => {

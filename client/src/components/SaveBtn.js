@@ -24,7 +24,7 @@ class SaveBtn extends Component {
         title: newBook.title,
         authors: newBook.authors,
         description: newBook.description,
-        image: newBook.imageLinks.thumbnails,
+        image: newBook.imageLinks.thumbnail,
         book_link: newBook.infoLink,
         preview_link: newBook.previewLink,
         book_id: this.state.book.id

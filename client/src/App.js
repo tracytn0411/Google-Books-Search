@@ -4,9 +4,12 @@ import './App.css';
 import {
   Navbar, Nav
 } from 'react-bootstrap';
+import {FaGithub} from 'react-icons/fa'
+
 
 import Header from './components/Header'
 import Search from './pages/Search'
+import Saved from './pages/Saved'
 
 class App extends Component {
 
@@ -17,7 +20,7 @@ class App extends Component {
     }
   }
  
-  toggleCollapse = () => {
+  toggleCollapse() {
     this.setState({
       isOpen: !this.state.isOpen
     })
@@ -34,15 +37,13 @@ class App extends Component {
               <Nav.Item className='px-2'>
                 <Link to="/" className='btn btn-light'>Search</Link>
               </Nav.Item>
-              {/* <Nav.Item>
-                <Link to="/saved" className='btn btn-light'>Saved Books</Link>
-              </Nav.Item> */}
-    
-              
+              <Nav.Item>
+                <Link to="/saved" className='btn btn-light'>Saved</Link>
+              </Nav.Item>
             </Nav>
-              {/* <a href="https://github.com/tracytn0411/google-books-search" role="button">
+              <a href="https://github.com/tracytn0411/google-books-search" role="button">
                 <FaGithub />
-              </a> */}
+              </a>
            
           </Navbar.Collapse>
         </Navbar>
@@ -51,7 +52,7 @@ class App extends Component {
 
         <Switch>
           <Route exact path="/" component={Search} />
-          {/* <Route path="/saved" component={SavedBooks} /> */}
+          <Route path="/saved" component={Saved} />
         </Switch>
       </BrowserRouter>
     )

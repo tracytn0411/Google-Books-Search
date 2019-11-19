@@ -74,8 +74,9 @@ class SearchForm extends Component {
                       <Card.Img src={book.volumeInfo.imageLinks.thumbnail} />
                     </Col>
                     <Col md={8}>
-                      <p className="lead">{book.volumeInfo.description}</p>
+                      <div className='overflow-hidden'><p>{book.volumeInfo.description}</p></div>
                       <SaveBtn data_book = {book}/>
+                      <Button variant='info' href={book.volumeInfo.previewLink} target='blank'>View</Button>
                       
                     </Col>
                   </Row>
