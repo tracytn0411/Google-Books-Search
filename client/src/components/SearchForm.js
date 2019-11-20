@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
 import {Form, Button, FormControl, Row, Col, Container, Card} from 'react-bootstrap';
 import axios from 'axios';
-import SaveBtn from './SaveBtn';
+//import SaveBtn from './SaveBtn';
 
 class SearchForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      searchInput: "",
-      searchResults: []
-    };
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
-  handleChange(event) {
-    var value = event.target.value;
-    this.setState({ searchInput: value });
+  handleInputChange(e) {
+    var value = e.target.value; //live change as typing
+    //console.log(value)
+    this.props.onInputChange(value)//pass props to search page
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    var searchBook = this.state.searchInput;
+    var searchBook = this.props.searchInput;
     console.log(`search word is ${searchBook}`);
 
     axios
@@ -30,63 +27,27 @@ class SearchForm extends Component {
       })
       .then(res => {
         console.log(res.data)
-        this.setState({
-          searchResults: res.data,
-          searchInput: ""
-        });
+        this.props.onSearchResults(res.data)//pass search data to search page
       })
       .catch(err => console.log(`Front search error: ${err}`));
   }
 
-  
-  render() {
-    return (
-      <Container fluid>
-        <Row className='m-1'>
-          <Col>
-            <Form inline onSubmit={this.handleSubmit}>
-              <FormControl
-                type="text"
-                placeholder="Enter a book..."
-                name="book"
-                value={this.state.book}
-                onChange={this.handleChange}
-              />
-              <Button type="submit">Search</Button>
-            </Form>
-          </Col>
-        </Row>
 
-        {/* In a concise body, no need for block body (curly braces) and an implicit return is attached */}
-        <Row className='m-1'>
-          {this.state.searchResults.map((book, index) => (
-            <Col md={6} lg={4} key={index}>
-              <Card>
-                <Card.Header>
-                  <h5>{book.volumeInfo.title}</h5>
-                  <p>
-                    by <em>{book.volumeInfo.authors}</em>
-                  </p>
-                </Card.Header>
-                <Card.Body>
-                  <Row>
-                    <Col md={4}>
-                      <Card.Img src={book.volumeInfo.imageLinks.thumbnail} />
-                    </Col>
-                    <Col md={8}>
-                      <div className='overflow-hidden'><p>{book.volumeInfo.description}</p></div>
-                      <SaveBtn data_book = {book}/>
-                      <Button variant='info' href={book.volumeInfo.previewLink} target='blank'>View</Button>
-                      
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+  render() {
+    const searchInput = this.props.searchInput
+    return (
+      <Container>
+        <Form inline onSubmit={this.handleSubmit}>
+
+          <FormControl 
+            type='text' placeholder='Enter a book...'
+            value={searchInput}
+            onChange={this.handleInputChange}
+          />
+          <Button type='submit'>Search</Button>
+        </Form>
       </Container>
-    );
+    )
   }
 }
 

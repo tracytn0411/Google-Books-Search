@@ -30,7 +30,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/">Google Books</Navbar.Brand>
+          <Navbar.Brand href="/">Google Books Search</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">

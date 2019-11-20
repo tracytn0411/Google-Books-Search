@@ -1,31 +1,23 @@
 import React, { Component } from 'react';
 import {Button} from 'react-bootstrap';
-import axios from 'axios';
 
 class DeleteBtn extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      book: this.props.data_book
-    }
-    this.handleDelete = this.handleDelete.bind(this)
+    this.deleteBook = this.deleteBook.bind(this)
   }
 
-  handleDelete() {
-    var deleteID = this.state.book._id
-    console.log(deleteID)
-    axios.delete(`/api/books/${deleteID}`)
-      .then(res => {
-        this.setState({
-          book: {}
-        })
-      })
-      .catch(err => console.log(`Frontend delete ERROR: ${err}`))
+  deleteBook(e) {
+    var bookID = e.target.id
+    console.log(`Delete book that has id: ${bookID}`)
+    this.props.deleteBook(bookID) //pass the book id to savedBooks (parent)
   }
 
   render() {
+    const bookID = this.props.bookID
+    console.log(bookID)
     return(
-      <Button variant='outline-success' onClick={this.handleDelete}>Saved!</Button>
+      <Button variant='outline-success' id={bookID} onClick={this.deleteBook}>Saved!</Button>
     )
   }
 }

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 //import SaveBtn from '../components/SaveBtn'
-import DeleteBtn from '../components/DeleteBtn'
+import SavedBooks from '../components/SavedBooks'
 
 class Saved extends Component {
   constructor(props) {
@@ -10,6 +9,7 @@ class Saved extends Component {
     this.state = {
       savedBooks: []
     }
+    this.deleteBook = this.deleteBook.bind(this)
   }
 
   componentDidMount(){
@@ -27,46 +27,24 @@ class Saved extends Component {
       .catch (err => console.log(`Frontend axios /api/books ERROR: ${err}`))
   }
 
-  render() {
-    const books = this.state.savedBooks
-    return (
-      <Container fluid>
-        <Row className='m-1'>
-          <Col>
-            <h3>Saved Books</h3>
-          </Col>
-        </Row>
+  //Delete book using id passed up from delete button 
+  deleteBook(id) {
+    axios
+      .delete(`/api/books/${id}`)
+      .then(res => {
+        console.log(`Book removed from saved list!`)
+        console.log(res.data)
+      })
+      .then(this.getBooks()) //to update the saved page (remove the deleted book)
+      .catch(err => console.log(`Frontend delete ERROR: ${err}`))
+  }
 
-        <Row>
-          {books.map((book) => 
-          <Col md={6} lg={4} key={book.book_id}>
-            <Card>
-              <Card.Header>
-                <h5>{book.title}</h5>
-                <p>
-                  by <em>{book.authors}</em>
-                </p>
-              </Card.Header>
-              <Card.Body>
-                  <Row>
-                    <Col md={4}>
-                      <Card.Img src={book.image} />
-                    </Col>
-                    <Col md={8}>
-                      <div className='overflow-hidden'><p>{book.description}</p></div>
-                      {/* <SaveBtn data_book = {book}/> */}
-                      <Button variant='info' href={book.previewLink} target='blank'>View</Button>
-                      <DeleteBtn data_book = {book}/>
-                    </Col>
-                  </Row>
-                </Card.Body>
-            </Card>
-          </Col>
-          )}
-        </Row>
-      </Container>
+  render(){
+    return(
+      <SavedBooks savedBooks={this.state.savedBooks} onDeleteClicked={this.handleDeleteClicked} deleteBook={this.deleteBook}/>
     )
   }
+
 }
 
 export default Saved;

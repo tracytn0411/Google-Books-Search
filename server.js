@@ -70,16 +70,24 @@ app.post("/api/search", (req, res) => {
 });
 
 // /api/books (post) - Will be used to save a new book to the database.
-app.post('/api/books', (req, res) => {
-  Book.create(req.body, (err, doc) => {
-    if(err) {
-      console.log(colors.red(`New book saved to MongoDB error: ${err}`))
+app.post("/api/books", (req, res) => {
+  var book_id = req.body.book_id;
+  console.log(book_id);
+  Book.findOne({ book_id: book_id }, (err, bookID) => {
+    if (bookID) {
+      console.log("This book has already been saved !".cyan);
     } else {
-      console.log(`New book saved to MongoDB: ${doc}`.green)
+      Book.create(req.body, (err, doc) => {
+        if (err) {
+          console.log(colors.red(`New book saved to MongoDB error: ${err}`));
+        } else {
+          console.log(`New book saved to MongoDB: ${doc}`.green)
+          res.json(doc)
+        }
+      });
     }
-
-  })
-})
+  });
+});
 
 
 // /api/books (get) - Should return all saved books as JSON.
@@ -94,14 +102,27 @@ app.get('/api/books', (req, res) => {
 app.delete('/api/books/:id', (req, res) => {
   Book.findByIdAndRemove({'_id': req.params.id}).exec((err, res) => {
     if(err) return console.log(`MongoDB delete book ERROR: ${err}`)
-    else console.log(res)
+    else {
+      // Book.find({}, (err, books) => {
+      //   if(err) return console.log(`MongoDB after delete book ERROR: ${err}`.red)
+      //   else res.json(books)
+      // })
+      console.log(`Deleted book: ${res}`.magenta)
+    }
   })
 })
 
-// * (get) - Will load your single HTML page in client/build/index.html. Make sure you have this after all other routes are defined.
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, './client/build/index.html'))
+// app.delete('/api/books/:id', (req, res) => {
+//   Book.findOneAndRemove({'book_id': req.params.id}).exec((err, res) => {
+//     if(err) return console.log(`MongoDB unsave book ERROR: ${err}`)
+//     else console.log(res)
+//   })
 // })
+
+// * (get) - Will load your single HTML page in client/build/index.html. Make sure you have this after all other routes are defined.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'))
+})
 
 app.listen(PORT, () => console.log(`LISTENING ON PORT ${PORT}`));
 
