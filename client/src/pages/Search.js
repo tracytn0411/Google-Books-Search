@@ -4,6 +4,8 @@ import React, { Component} from 'react';
 
 import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
+//import { getDefaultSettings } from 'http2';
+import axios from 'axios';
 
 class Search extends Component {
   constructor(props) {
@@ -16,6 +18,21 @@ class Search extends Component {
     this.handleSearchResults = this.handleSearchResults.bind(this);
   }
 
+  componentDidMount(){
+    this.getDefault()
+  }
+
+  getDefault() {
+    axios.get('/api/default')
+    .then(res => {
+      console.log(res.data)
+      this.setState({
+        searchResults: res.data
+      })
+    })
+    .catch(err => console.log(`Frontend default books results error: ${err}`))
+  }
+
   handleInputChange(searchInput){
     this.setState({
       searchInput: searchInput //pass input from search form and set state here
@@ -24,7 +41,8 @@ class Search extends Component {
 
   handleSearchResults(data){
     this.setState({
-      searchResults: data
+      searchResults: data,
+      searchInput: '', //clear the form input after submit
     })
   }
 

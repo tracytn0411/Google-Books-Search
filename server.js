@@ -44,11 +44,25 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
 })
 
+// Homepage default
+app.get('/api/default', (req, res) => {
+  var defaultUrl = `https://www.googleapis.com/books/v1/volumes?q=best+sellers&printType=books&maxResults=30&key=${process.env.BOOKS_API_KEY}`;
+  console.log(defaultUrl)
+  axios
+    .get(defaultUrl)
+    .then(response => {
+      res.json(response.data.items)
+    })
+    .catch(error => {
+      console.log(colors.red(`Google API default url error: ${error}`))
+    })
+})
+
 // Search for books
 app.post("/api/search", (req, res) => {
   var bookTitle = req.body.title.replace(/\s/g, "+") //replace space with '+'
   console.log(bookTitle);
-  var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&key=${process.env.BOOKS_API_KEY}`;
+  var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&printType=magazines&key=${process.env.BOOKS_API_KEY}`;
   console.log(bookUrl);
   axios
     .get(bookUrl)

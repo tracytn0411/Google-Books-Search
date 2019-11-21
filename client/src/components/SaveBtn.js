@@ -56,7 +56,7 @@ class SaveBtn extends Component {
     const isSaved = this.state.isSaved;
 
     return (
-      <div>
+      <>
         {isSaved ? (
           <Button variant="outline-success" onClick={this.handleUnsave}>
             Saved!
@@ -66,7 +66,7 @@ class SaveBtn extends Component {
             Save
           </Button>
         )}
-      </div>
+      </>
       
     );
   }

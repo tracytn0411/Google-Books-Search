@@ -1,10 +1,10 @@
 //import React, { useState } from "react";
 import React from "react";
 
-import {Jumbotron} from 'react-bootstrap';
+import {Jumbotron, Image} from 'react-bootstrap';
 //import {Toast} from "react-bootstrap";
 import {Container} from 'react-bootstrap';
-//import smashing from '../Images/smashing.png'
+import Google_Books from '../images/Google_Books.svg'
 
 // const ExampleToast = ({ children }) => {
 //   const [show, toggleShow] = useState(true);
@@ -21,8 +21,9 @@ import {Container} from 'react-bootstrap';
 
 const Header = () => (
   <Jumbotron fluid>
-    <Container className='p-2'>
-      <h1 className="header">Google Books Search</h1>
+    <Container className='Header-jumbotron'>
+      <p className="lead">Search for and Save Books of Interest on</p>
+      <Image fluid className='p-2 ml-4 w-25' src={Google_Books} alt='google-books-logo' />
       {/* <p className='lead'>Get the lastest news from
       
       <img className='p-2' src={smashing} alt='magazine-logo'></img>

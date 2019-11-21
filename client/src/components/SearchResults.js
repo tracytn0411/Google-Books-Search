@@ -1,41 +1,52 @@
 import React, { Component } from "react";
-import { Button, Row, Col, Container, Card } from "react-bootstrap";
-import SaveBtn from './SaveBtn'
+import { Row, Col, Container, Card } from "react-bootstrap";
+import SaveBtn from "./SaveBtn";
 
 class SearchResults extends Component {
   render() {
     var searchResults = this.props.searchResults;
     //console.log(searchResults)
     return (
-      <Container>
-        <Row>
+      <Container fluid className="searchResults">
+        <Row className="m-1">
           {searchResults.map((book, index) => (
-            <Col md={6} lg={4} key={index}>
+            <Col md={6} lg={4} key={index} className="mt-3">
               <Card>
                 <Card.Header>
-                  <h5>{book.volumeInfo.title}</h5>
-                  <p>
-                    by <em>{book.volumeInfo.authors}</em>
+                  <Card.Title className="bookTitle">
+                    {book.volumeInfo.title}
+                  </Card.Title>
+                  <p className="mb-1">
+                    by{" "}
+                    <em className="bookAuthors">
+                      {book.volumeInfo.authors
+                        .map((author, i) => (
+                          <span key={i}>{author}</span>
+                        ))
+                        // Join authors in array with a comma
+                        .reduce((prev, curr) => [prev, ', ', curr])}
+                    </em>
                   </p>
                 </Card.Header>
                 <Card.Body>
                   <Row>
-                    <Col md={4}>
+                    <Col md={4} className="p-0">
                       <Card.Img src={book.volumeInfo.imageLinks.thumbnail} />
                     </Col>
                     <Col md={8}>
-                      <div className="overflow-hidden">
-                        <p>{book.volumeInfo.description}</p>
+                      <div className="bookDescription">
+                        <Card.Text>{book.volumeInfo.description}</Card.Text>
                       </div>
-                      <Button
-                        variant="info"
-                        href={book.volumeInfo.previewLink}
-                        target="blank"
+                      <Card.Link
+                        href={book.volumeInfo.infoLink}
+                        target="_blank"
                       >
-                        View
-                      </Button>
-                      <SaveBtn data_book = {book}/>
-                      {/* <DeleteBtn data_book = {book}/> */}
+                        Read more...
+                      </Card.Link>
+
+                      <Card.Footer className="text-right">
+                        <SaveBtn className="mt-4" data_book={book} />
+                      </Card.Footer>
                     </Col>
                   </Row>
                 </Card.Body>
