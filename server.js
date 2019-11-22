@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 })
 
 // Homepage default
-app.get('/api/default', (req, res) => {
+app.get('/api/bestsellers', (req, res) => {
   var defaultUrl = `https://www.googleapis.com/books/v1/volumes?q=best+sellers&printType=books&maxResults=30&key=${process.env.BOOKS_API_KEY}`;
   console.log(defaultUrl)
   axios
@@ -87,11 +87,12 @@ app.post("/api/search", (req, res) => {
 app.post("/api/books", (req, res) => {
   var book_id = req.body.book_id;
   console.log(book_id);
-  Book.findOne({ book_id: book_id }, (err, bookID) => {
+  var savedBooks = new Book(req.body)
+  savedBooks.findOne({ book_id: book_id }, (err, bookID) => {
     if (bookID) {
       console.log("This book has already been saved !".cyan);
     } else {
-      Book.create(req.body, (err, doc) => {
+      savedBooks.create(req.body, (err, doc) => {
         if (err) {
           console.log(colors.red(`New book saved to MongoDB error: ${err}`));
         } else {
@@ -106,7 +107,7 @@ app.post("/api/books", (req, res) => {
 
 // /api/books (get) - Should return all saved books as JSON.
 app.get('/api/books', (req, res) => {
-  Book.find({}, (err, books) => {
+  savedBooks.find({}, (err, books) => {
     if(err) return console.log(colors.red(`Get saved books from MongoDB ERROR: ${err}`))
     else res.json(books)
   })
