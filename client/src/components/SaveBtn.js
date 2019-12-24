@@ -17,16 +17,16 @@ class SaveBtn extends Component {
     this.setState({
       isSaved: true
     });
-    var newBook = this.props.data_book.volumeInfo;
+    var newBook = this.props.data_book;
     axios
       .post(`/api/books`, {
         title: newBook.title,
         authors: newBook.authors,
         description: newBook.description,
-        image: newBook.imageLinks.thumbnail,
-        book_link: newBook.infoLink,
-        preview_link: newBook.previewLink,
-        book_id: this.props.data_book.id
+        image: newBook.image,
+        book_link: newBook.book_link,
+        preview_link: newBook.preview_link,
+        book_id: newBook.book_id
       })
       .then(res => {
         var saveID = res.data._id

@@ -21,7 +21,6 @@ class SearchForm extends Component {
     var searchBook = this.props.searchInput;
     console.log(`search word is ${searchBook}`);
 
-
     axios
       .post("/api/search", {
         title: searchBook

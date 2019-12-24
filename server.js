@@ -19,6 +19,7 @@ app.use(methodOverride('_method'));
 //Connect to MongoDB
 const mongoose = require('mongoose');
 const Book = require('./models/book')
+const Default = require('./models/default')
 //const dbURI = 'mongodb://localhost:27017/googlebooks'
 var dbURI = process.env.MONGODB_ATLAS_CLUSTER_URI;
 
@@ -46,8 +47,8 @@ app.get('/', (req, res) => {
 
 // Homepage default
 app.get('/api/bestsellers', (req, res) => {
-  var defaultUrl = `https://www.googleapis.com/books/v1/volumes?q=best+sellers&printType=books&maxResults=30&key=${process.env.BOOKS_API_KEY}`;
-  console.log(defaultUrl)
+  var defaultUrl = `https://www.googleapis.com/books/v1/volumes?q=best+sellers&printType=book&key=${process.env.BOOKS_API_KEY}`;
+  console.log(colors.blue(`Default URL is ${defaultUrl}`))
   axios
     .get(defaultUrl)
     .then(response => {
@@ -58,41 +59,69 @@ app.get('/api/bestsellers', (req, res) => {
     })
 })
 
+app.get('/api/default', (req, res) => {
+  Default.find({}, (err, books) => {
+    if(err) return console.log(colors.red(`Get default from MongoDB ERROR: ${err}`))
+    else res.json(books)
+  })
+})
+
 // Search for books
 app.post("/api/search", (req, res) => {
   var bookTitle = req.body.title.replace(/\s/g, "+") //replace space with '+'
   console.log(bookTitle);
-  var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&printType=magazines&key=${process.env.BOOKS_API_KEY}`;
-  console.log(bookUrl);
+  // var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&printType=books&key=${process.env.BOOKS_API_KEY}`;
+  var bookUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookTitle}&printType=books&fields=items(id,volumeInfo)&key=${process.env.BOOKS_API_KEY}`
+  console.log(colors.blue(`Search URL is ${bookUrl}`));
   axios
     .get(bookUrl)
-    .then(response => {
-      //console.log(response.data.items);
-      //var booksArray = response.data.items
+    .then(async response => {
+      var results = response.data.items
+      var searchResults = []
 
-     
-      // booksArray.forEach((book,i) => {
-      //   var bookID = book[i].id
-      //   console.log(bookID)
-      // });
-      //console.log(bookID)
-      res.json(response.data.items);
+      results.forEach((result, index) => {
+        var vol = result.volumeInfo
+        var book_id = result.id
+        var title = vol.title
+        var authors = ''
+        var description = vol.description
+        var image = vol.imageLinks.thumbnail
+        var book_link = vol.infoLink
+        var preview_link = vol.previewLink
+        if (!vol.authors){ //if no authors, display N/A (array)
+          authors = ['N/A']
+        } else {
+          authors = vol.authors
+        }
+        
+        searchResults.push({
+          title: title,
+          authors: authors,
+          description: description,
+          image: image,
+          book_link: book_link,
+          preview_link: preview_link,
+          book_id: book_id
+        })
+      })
+
+      res.json(searchResults)
     })
     .catch(error => {
       console.log(colors.red("Google API axios error: " + error));
     });
 });
 
+
 // /api/books (post) - Will be used to save a new book to the database.
 app.post("/api/books", (req, res) => {
   var book_id = req.body.book_id;
   console.log(book_id);
-  var savedBooks = new Book(req.body)
-  savedBooks.findOne({ book_id: book_id }, (err, bookID) => {
+  Book.findOne({ book_id: book_id }, (err, bookID) => {
     if (bookID) {
       console.log("This book has already been saved !".cyan);
     } else {
-      savedBooks.create(req.body, (err, doc) => {
+      Book.create(req.body, (err, doc) => {
         if (err) {
           console.log(colors.red(`New book saved to MongoDB error: ${err}`));
         } else {
@@ -107,7 +136,7 @@ app.post("/api/books", (req, res) => {
 
 // /api/books (get) - Should return all saved books as JSON.
 app.get('/api/books', (req, res) => {
-  savedBooks.find({}, (err, books) => {
+  Book.find({}, (err, books) => {
     if(err) return console.log(colors.red(`Get saved books from MongoDB ERROR: ${err}`))
     else res.json(books)
   })
@@ -140,6 +169,3 @@ app.get('*', (req, res) => {
 })
 
 app.listen(PORT, () => console.log(`LISTENING ON PORT ${PORT}`));
-
-
-

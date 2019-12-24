@@ -1,16 +1,13 @@
 import React, { Component} from 'react';
-//import {Container} from 'react-bootstrap';
-//import axios from 'axios';
-
 import SearchForm from '../components/SearchForm'
 import SearchResults from '../components/SearchResults'
-//import { getDefaultSettings } from 'http2';
 import axios from 'axios';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchInfo: '',
       searchInput: '',
       searchResults: []
     }
@@ -27,6 +24,7 @@ class Search extends Component {
     .then(res => {
       console.log(res.data)
       this.setState({
+        searchInfo: 'Current Best-Selling Books',
         searchResults: res.data
       })
     })
@@ -42,6 +40,7 @@ class Search extends Component {
   handleSearchResults(data){
     this.setState({
       searchResults: data,
+      searchInfo: `Search Results for "${this.state.searchInput}"`,
       searchInput: '', //clear the form input after submit
     })
   }
@@ -49,8 +48,8 @@ class Search extends Component {
   render() {
     return (
       <> 
-        <SearchForm searchInput={this.state.searchInput} onInputChange={this.handleInputChange} onSearchResults={this.handleSearchResults}/>
-        <SearchResults searchInput={this.state.searchInput} searchResults={this.state.searchResults}/>
+        <SearchForm searchInput={this.state.searchInput} onInputChange={this.handleInputChange} onSearchResults={this.handleSearchResults} />
+        <SearchResults searchInfo={this.state.searchInfo} searchInput={this.state.searchInput} searchResults={this.state.searchResults} />
       </>
      
     )

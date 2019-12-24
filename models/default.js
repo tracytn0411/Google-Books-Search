@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var BookSchema = new Schema({
+var DefaultSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -41,6 +41,6 @@ var BookSchema = new Schema({
   }
 });
 
-var Book = mongoose.model("Book", BookSchema);
-module.exports = Book;
+var Default = mongoose.model("Default", DefaultSchema);
+module.exports = Default;
 

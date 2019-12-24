@@ -5,40 +5,45 @@ import SaveBtn from "./SaveBtn";
 class SearchResults extends Component {
   render() {
     var searchResults = this.props.searchResults;
-    //console.log(searchResults)
+    var searchInfo = this.props.searchInfo;
+    //console.log(searchResults);
     return (
       <Container fluid className="searchResults">
+        <Row className='m-1'>
+          <Col>
+            <h4>{searchInfo}</h4>  
+          </Col>
+        </Row>
         <Row className="m-1">
           {searchResults.map((book, index) => (
             <Col md={6} lg={4} key={index} className="mt-3">
               <Card>
                 <Card.Header>
                   <Card.Title className="bookTitle">
-                    {book.volumeInfo.title}
+                    {book.title}
                   </Card.Title>
                   <p className="mb-1">
                     by{" "}
                     <em className="bookAuthors">
-                      {book.volumeInfo.authors
+                      {book.authors
                         .map((author, i) => (
-                          <span key={i}>{author}</span>
-                        ))
+                        <span key={i}>{author}</span>))
                         // Join authors in array with a comma
-                        .reduce((prev, curr) => [prev, ', ', curr])}
+                        .reduce((prev, curr) => [prev, ", ", curr])}
                     </em>
                   </p>
                 </Card.Header>
                 <Card.Body>
                   <Row>
                     <Col md={4} className="p-0">
-                      <Card.Img src={book.volumeInfo.imageLinks.thumbnail} />
+                      <Card.Img src={book.image} />
                     </Col>
                     <Col md={8}>
                       <div className="bookDescription">
-                        <Card.Text>{book.volumeInfo.description}</Card.Text>
+                        <Card.Text>{book.description}</Card.Text>
                       </div>
                       <Card.Link
-                        href={book.volumeInfo.infoLink}
+                        href={book.book_link}
                         target="_blank"
                       >
                         Read more...
