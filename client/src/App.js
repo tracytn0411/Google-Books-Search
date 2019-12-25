@@ -58,6 +58,10 @@ class App extends Component {
           <Route exact path="/" component={Search} />
           <Route path="/saved" component={Saved} />
         </Switch>
+
+        <footer className='App-footer text-center'>
+          Developed by Tracy Nguyen
+        </footer>
       </BrowserRouter>
     );
   }
